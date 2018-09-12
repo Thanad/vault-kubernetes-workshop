@@ -6,7 +6,7 @@ if [ -z "${GOOGLE_CLOUD_PROJECT}" ]; then
   exit 1
 fi
 
-REGION="us-west1"
+REGION="asia-southeast1"
 
 LB_IP="$(gcloud compute addresses describe vault --region ${REGION} --format 'value(address)')"
 GCS_BUCKET="${GOOGLE_CLOUD_PROJECT}-vault-storage"
@@ -22,8 +22,6 @@ export VAULT_TOKEN="$(gsutil cat "gs://${GCS_BUCKET}/root-token.enc" | \
     --ciphertext-file - \
     --plaintext-file -)"
 
-export PATH="${PATH}:${HOME}/bin"
-
-alias vualt=vault
+vault status
 
 exec $SHELL

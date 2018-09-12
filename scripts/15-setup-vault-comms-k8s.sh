@@ -6,8 +6,8 @@ if [ -z "${GOOGLE_CLOUD_PROJECT}" ]; then
   exit 1
 fi
 
-REGION="us-west1"
-ZONE="us-west1-b"
+REGION="asia-southeast1"
+ZONE="asia-southeast1-b"
 GKE_NAME="my-apps"
 CLUSTER_NAME="gke_${GOOGLE_CLOUD_PROJECT}_${ZONE}_${GKE_NAME}"
 LB_IP="$(gcloud compute addresses describe vault --region ${REGION} --format 'value(address)')"
@@ -31,7 +31,7 @@ K8S_CACERT="$(kubectl config view --raw \
   -o go-template="{{ range .clusters }}{{ if eq .name \"${CLUSTER_NAME}\" }}{{ index .cluster \"certificate-authority-data\" }}{{ end }}{{ end }}" | base64 --decode)"
 
 # Enable the Kubernetes auth method
-vault auth enable kubernetes
+if ! [[ $(vault auth list | grep kubernetes) ]]; then vault auth enable kubernetes; fi
 
 # Configure Vault to talk to our Kubernetes host with the cluster's CA and the
 # correct token reviewer JWT token

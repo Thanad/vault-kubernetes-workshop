@@ -6,7 +6,7 @@ if [ -z "${GOOGLE_CLOUD_PROJECT}" ]; then
   exit 1
 fi
 
-REGION="us-west1"
+REGION="asia-southeast1"
 
 LB_IP="$(gcloud compute addresses describe vault --region ${REGION} --format 'value(address)')"
 GCS_BUCKET="${GOOGLE_CLOUD_PROJECT}-vault-storage"
@@ -14,10 +14,14 @@ KMS_KEY="projects/${GOOGLE_CLOUD_PROJECT}/locations/global/keyRings/vault/crypto
 
 DIR="$(pwd)/tls"
 
+kubectl get configmap vault && kubectl delete configmap vault
+
 kubectl create configmap vault \
   --from-literal "load_balancer_address=${LB_IP}" \
   --from-literal "gcs_bucket_name=${GCS_BUCKET}" \
   --from-literal "kms_key_id=${KMS_KEY}"
+
+kubectl get secret vault-tls && kubectl delete secret vault-tls
 
 kubectl create secret generic vault-tls \
   --from-file "${DIR}/ca.crt" \

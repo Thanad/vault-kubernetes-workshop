@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REGION="us-west1"
+REGION="asia-southeast1"
 LB_IP="$(gcloud compute addresses describe vault --region ${REGION} --format 'value(address)')"
 
 DIR="$(pwd)/tls"
@@ -22,11 +22,11 @@ distinguished_name = req_distinguished_name
 req_extensions     = v3_req
 
 [req_distinguished_name]
-C  = US
-ST = California
-L  = The Cloud
-O  = Demo
-CN = vault
+C  = TH
+ST = Bangkok
+L  = Ratchathewi
+O  = King Power Click
+CN = vault.kingpowerclick.com
 
 [v3_req]
 basicConstraints     = CA:FALSE
@@ -38,6 +38,7 @@ subjectAltName       = @alt_names
 [alt_names]
 IP.1  = ${LB_IP}
 DNS.1 = vault.default.svc.cluster.local
+DNS.2 = vault.kingpowerclick.com
 EOF
 
 # Generate Vault's certificates and a CSR
@@ -55,7 +56,7 @@ openssl req \
   -days 120 \
   -nodes \
   -x509 \
-  -subj "/C=US/ST=California/L=The Cloud/O=Vault CA" \
+  -subj "/C=TH/ST=Bangkok/L=Ratchathewi/O=King Power Click" \
   -keyout "${DIR}/ca.key" \
   -out "${DIR}/ca.crt"
 

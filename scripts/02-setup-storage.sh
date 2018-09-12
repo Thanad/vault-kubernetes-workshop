@@ -6,4 +6,4 @@ if [ -z "${GOOGLE_CLOUD_PROJECT}" ]; then
   exit 1
 fi
 
-gsutil mb "gs://${GOOGLE_CLOUD_PROJECT}-vault-storage"
+gsutil mb -l asia "gs://${GOOGLE_CLOUD_PROJECT}-vault-storage"

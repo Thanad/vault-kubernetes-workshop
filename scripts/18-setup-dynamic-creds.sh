@@ -6,11 +6,14 @@ if [ -z "${GOOGLE_CLOUD_PROJECT}" ]; then
   exit 1
 fi
 
+REGION="asia-southeast1"
+ZONE="asia-southeast1-b"
+
 # Create CloudSQL instance
 gcloud sql instances create my-instance \
     --database-version MYSQL_5_7 \
     --tier db-f1-micro \
-    --region us-east1 \
+    --global \
     --authorized-networks 0.0.0.0/0
 
 INSTANCE_IP="$(gcloud sql instances describe my-instance --format 'value(ipAddresses[0].ipAddress)')"
